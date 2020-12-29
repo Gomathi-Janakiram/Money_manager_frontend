@@ -9,7 +9,7 @@ export const Provider = ({ children }) => {
     const [transactions, setTransactions] = useState([])
 
     const addTransaction = (data) => {
-        axios.post("http://localhost:4000/post", data)
+        axios.post("https://salty-sea-09605.herokuapp.com/post", data)
             .then(res => {
                 getTransactions()
             })
@@ -24,7 +24,7 @@ export const Provider = ({ children }) => {
 
 
     const getTransactions = () => {
-        axios.get("http://localhost:4000/get")
+        axios.get("https://salty-sea-09605.herokuapp.com/get")
             .then(res => {
                 setTransactions(res.data.data)
                 // console.log(transactions)
@@ -34,7 +34,7 @@ export const Provider = ({ children }) => {
     }
 
     const deleteTransaction=(data)=>{
-        axios.delete(`http://localhost:4000/delete`,data._id)
+        axios.delete(`https://salty-sea-09605.herokuapp.com/delete`,data._id)
         .then(res=>{
             getTransactions()
         }).catch(err=>{
