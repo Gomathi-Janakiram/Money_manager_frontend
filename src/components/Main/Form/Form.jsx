@@ -3,6 +3,7 @@ import { TextField, Typography, Grid, Button, FormControl, InputLabel, Select, M
 import useStyles from "./styles"
 import {ExpenseTrackerContext} from "../../../Context/context"
 import {v4 as uuidv4} from "uuid"
+import {incomeCategories,expenseCategories} from "../../../constants/categories"
 
 const initialstate={
     amount:"",
@@ -21,6 +22,7 @@ function Form() {
         addTransaction(transaction)
         setformData(initialstate)
     }
+    const selectedCategories=formData.type==="Income"?incomeCategories:expenseCategories
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -43,8 +45,9 @@ function Form() {
                 <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
                     <Select value={formData.category} onChange={(e)=>setformData({...formData,category:e.target.value})}>
-                        <MenuItem value="Business">Business</MenuItem>
-                        <MenuItem value="Salary">Salary</MenuItem>
+                    {selectedCategories.map((c)=>
+                            <MenuItem key={c.type} value={c.type}>{c.type}</MenuItem>
+                        )}
                     </Select>
                 </FormControl>
             </Grid>

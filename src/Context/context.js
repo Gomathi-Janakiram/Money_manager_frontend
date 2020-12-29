@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect, useState } from "react"
+import React, { createContext, useEffect, useState } from "react"
 import axios from "axios"
 
 const initialState = [];
@@ -9,7 +9,7 @@ export const Provider = ({ children }) => {
     const [transactions, setTransactions] = useState([])
 
     const addTransaction = (data) => {
-        axios.post("http://localhost:8000/post", data)
+        axios.post("http://localhost:4000/post", data)
             .then(res => {
                 getTransactions()
             })
@@ -18,22 +18,33 @@ export const Provider = ({ children }) => {
             })
     }
 
-    useEffect(() => {
-        getTransactions()
-    })
+    // useEffect(() => {
+    //     getTransactions()
+    // },[transactions])
 
 
     const getTransactions = () => {
-        axios.get("http://localhost:8000/get")
+        axios.get("http://localhost:4000/get")
             .then(res => {
                 setTransactions(res.data.data)
-                console.log(transactions)
+                // console.log(transactions)
             }).catch(err=>{
                 console.log(err)
             })
     }
 
+    const deleteTransaction=(data)=>{
+        axios.delete(`http://localhost:4000/delete`,data._id)
+        .then(res=>{
+            getTransactions()
+        }).catch(err=>{
+            console.log(err)
+        })
+    }
 
+    const balance=transactions.reduce((acc,currVal)=>{
+        return (currVal.type==="Expense"?acc-currVal.amount:acc+currVal.amount)
+    },0)
 
     // const addTransaction=(transaction)=>{
     //     dispatch({type:"ADD_TRANSACTION",payload:transaction})
@@ -43,7 +54,9 @@ export const Provider = ({ children }) => {
         <ExpenseTrackerContext.Provider value={{
             getTransactions,
             addTransaction,
-            transactions
+            deleteTransaction,
+            transactions,
+            balance
         }}>
             {children}
         </ExpenseTrackerContext.Provider>
